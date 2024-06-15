@@ -8,51 +8,11 @@ def highlight(sprite,screen,color="red"):
     
 
 def call_img(img,beg,w=50,h=50,pos=(0,0),scale=1,color="black"):
-    #img =pg.image.load(url).convert_alpha()
     surface = pg.Surface((w,h)).convert_alpha()
     surface.blit(img,pos,(beg.x,beg.y,beg.x+w,beg.y+h))
     surface = pg.transform.scale(surface,(w*scale,h*scale))
-    #surface.set_colorkey(color)
     return surface
 
-#img0 = call_img("asset/ts/Factions/Knights/Buildings/House/House_Blue.png")
-
-"""
-g = pg.init()
-screen = pg.display.set_mode((0,0))
-clock = pg.time.Clock()
-
-running = True
-"""
-"""
-class Panel:
-    def __init__(self,surface,text="",font=None,size=25,color="blue"):
-        self.color = color
-        self.font = font
-        self.size = size
-        self.font = pg.font.SysFont(self.font,self.size)
-        self.surface = surface
-        self.text = text
-        self.img = self.font.render(self.text,True,self.color)
-        self.rect = self.img.get_rect()
-        
-    def render(self):
-        self.img = self.font.render(self.text,True,self.color)
-    def edit_text(self,text=""):
-        self.text = text
-        
-    def blit(self,screen,pos=(100,100)):
-        screen.blit(self.img,pos)
-    
-    def edit_font(self,font=None,size=None):
-        self.font = font
-        self.size = size
-        self.font = pg.font.SysFont(self.font,self.size)
-        self.render()
-    
-    def draw(self,screen,pos=(150,150)):
-        self.blit(screen,pos)
-"""
 class Point(pg.sprite.Sprite):
     points = pg.sprite.Group()
     def __init__(self,x=0,y=0,z=0,color="black"):
@@ -65,17 +25,7 @@ class Point(pg.sprite.Sprite):
         self.add(Point.points)
     
     def __str__(self):
-        return f"{self.x},{self.y},{self.z}"
-    
-    #def __add__(self,point):
-    #    x = self.x + point.x
-    #    y = self.y + point.y
-    #    z = self.z + point.z
-    #    return Point(x,y,z)
-    
-    #def draw(self,screen):
-    #    pg.draw.circle(screen,self.color,(self.x,self.y))
-        
+        return f"{self.x},{self.y},{self.z}"  
 class Frame(pg.sprite.Sprite):
     frames = pg.sprite.Group()
     def __init__(self,beg,h,w,color="white",url=None,grid=False):
@@ -100,36 +50,26 @@ class Frame(pg.sprite.Sprite):
         self.grid = grid
         self.add(Frame.frames)
         
-    #def draw(self,screen):
-        #pg.draw.rect(screen,self.color,self.rect)
-        #if self.grid == True:
-        #    self.make_grid(screen)
-        #for i,j in self.elements :
-        #    j.draw(screen)
     def clicked(self,e,args=None):
         print(f"clicked on frame : {e}")
         
     def update(self,events):
         for e in events:
-            #print("looking for event")
             if e.type == pg.MOUSEBUTTONDOWN:
-                #print("in event")
                 flag = 0
                 ob = None
                 for i,j in self.dico.items():
-                    print(f"item : {i} ; {j}")
                     if self.rect.collidepoint(e.pos[0],e.pos[1]):
-                        print(f"collided something {i},{j}")
                         if isinstance(j,Button):
-                            print("clicked on button")
                             j.clicked()
                         if isinstance(j,Tile):
                             j.clicked(self)
                         flag = 1 
                         ob = j
                     else :
-                        print("collided nothing")  
+                        print("collided nothing in self.dico")  
                 if flag == 0:
+                    print("making frame process")
                     self.clicked(e)
                 else:
                     print(f"collided : {ob}")
@@ -152,27 +92,20 @@ class Tile(pg.sprite.Sprite):
         self.color = color
         self.dx = Tile.x
         self.dy = Tile.y
-        #self.image = pg.Surface((self.dx,self.dy))
+        
         if url != None:
-            #self.image = pg.image.load("/home/alma/Documents/prog/asset/grass.png")
             self.image = pg.image.load(url)
             self.image = pg.transform.scale(self.image,(self.dx,self.dy))
         else :
             self.image = pg.Surface((self.dx,self.dy))
-        #self.image.fill(self.color)
         
         self.cg = cg
-        #self.surface = pg.Surface((self.dx,self.dy))
-        
         self.rect = self.image.get_rect()
         self.rect.center = (self.cg.x,self.cg.y)
         self.id_item = 0
         self.elements = {}
         self.add(Tile.tiles)
-    
-    #def draw(self,screen):
-    #    pg.draw.rect(screen,self.color,self.rect)
-        
+
     def move(self,x=0,y=0,z=0):
         add = Point(x,y,z)
         self.cg = self.cg + add
@@ -196,10 +129,7 @@ class Tile(pg.sprite.Sprite):
         else :
             self.color = "green"
         return self.name
-    
-    #def update(self,game):
-    #    if self.cg.x > game.w:
-            
+        
 class Player:
     def __init__(self,name=""):
         self.name = name
@@ -226,11 +156,7 @@ class Shop(Frame):
     
     def clicked_on_child(self):
         print("clicked on child of shop")
-        #self.frame = Frame
-        
-    #def add_item(self,id,ob):
-    #    self.items[id] = ob
-    
+
 class ShopItem(Tile):
     shop_items = pg.sprite.Group()
     def __init__(self,url,frame,cg,w=100,h=100,color="red",name=None,cost=50):
@@ -240,18 +166,12 @@ class ShopItem(Tile):
         else:
             self.name = name
         super().__init__(name,cg,color,url)
-        #self.image = pg.image.load(url)
-        #self.rect = self.image.get_rect()
-        #self.rect.center = (1700,500)
         self.cost = cost
         self.frame=frame
         self.add(ShopItem.shop_items)
-        #self.y=y
-        #self.x=x
         self.w=w
         self.h=h
-        #self.btn = Button(self.x,self.y,self.w,self.h,'blue',frame,url)
-    
+        
     def clicked(self,args=None):
         print(f"clicked on shopitem :\nname : {self.name}\ncost : {self.cost}")
 
